@@ -53,7 +53,7 @@ const countSafeReports = (reports: number[][], dampener = false): number => {
 
 // MAIN
 const main = async (file: string) => {
-  const data = await readInput(`${import.meta.dir}/${file}`);
+  const data = await readInput(file);
   console.log(countSafeReports(data));
   console.log(countSafeReports(data, true));
 };

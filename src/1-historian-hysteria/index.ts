@@ -34,7 +34,7 @@ const similarity = (listA: number[], listB: number[]): number => {
 
 // MAIN
 const main = async (file: string) => {
-  const { listA, listB } = await readInput(`${import.meta.dir}/${file}`);
+  const { listA, listB } = await readInput(file);
   console.log(`Distance: ${distance(listA, listB)}`);
   console.log(`Similarity: ${similarity(listA, listB)}`);
 };
