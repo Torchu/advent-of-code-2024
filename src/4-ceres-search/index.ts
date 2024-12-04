@@ -96,11 +96,47 @@ const countWords = (data: string[][]): number => {
   return count;
 };
 
+/**
+ * Returns the number of crosses of the word MAS in the data.
+ * A cross is defined as a 3x3 square where the char A is in the center and the chars M and S are in the corners.
+ *
+ * @param data The data to search for the word MAS
+ *
+ * @returns The number of crosses of the word MAS in the data
+ */
+const countCrosses = (data: string[][]): number => {
+  let count = 0;
+  for (let i = 1; i < data.length - 1; i++) {
+    for (let j = 1; j < data.length - 1; j++) {
+      if (data[i][j] !== "A") {
+        continue;
+      }
+
+      if (
+        (data[i - 1][j - 1] !== "M" || data[i + 1][j + 1] !== "S") &&
+        (data[i - 1][j - 1] !== "S" || data[i + 1][j + 1] !== "M")
+      ) {
+        continue;
+      }
+
+      if (
+        (data[i - 1][j + 1] !== "M" || data[i + 1][j - 1] !== "S") &&
+        (data[i - 1][j + 1] !== "S" || data[i + 1][j - 1] !== "M")
+      ) {
+        continue;
+      }
+
+      count++;
+    }
+  }
+  return count;
+};
+
 // MAIN
 const main = async (file: string) => {
   const data = await readInput(file);
-  const result = countWords(data);
-  console.log(result);
+  console.log(countWords(data));
+  console.log(countCrosses(data));
 };
 
 export default main;
