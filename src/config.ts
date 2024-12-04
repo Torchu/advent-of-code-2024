@@ -1,6 +1,7 @@
 import day1 from "./1-historian-hysteria/index";
 import day2 from "./2-red-nosed-reports/index";
 import day3 from "./3-mull-it-over/index";
+import day4 from "./4-ceres-search/index";
 
 type Day = {
   fn: (file: string) => void;
@@ -19,6 +20,10 @@ const days: Record<string, Day> = {
   3: {
     fn: day3,
     path: "src/3-mull-it-over",
+  },
+  4: {
+    fn: day4,
+    path: "src/4-ceres-search",
   },
 };
 
