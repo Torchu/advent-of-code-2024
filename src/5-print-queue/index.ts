@@ -47,12 +47,29 @@ const isValidUpdate = (
   });
 };
 
+/**
+ * Sum the middle number of all valid updates.
+ *
+ * @param rules - The rules to check the update against.
+ * @param updates - The updates to check.
+ *
+ * @returns The sum of the middle number of all valid updates.
+ */
+const sumValidUpdates = (
+  rules: Record<number, number[]>,
+  updates: number[][]
+): number => {
+  const validUpdates = updates.filter((update) => isValidUpdate(rules, update));
+  return validUpdates.reduce(
+    (acc, update) => acc + update[Math.floor(update.length / 2)],
+    0
+  );
+};
+
 // MAIN
 const main = async (file: string) => {
   const data = await readInput(file);
-  data.updates.forEach((update) => {
-    console.log(update, isValidUpdate(data.rules, update));
-  });
+  console.log(sumValidUpdates(data.rules, data.updates));
 };
 
 export default main;
