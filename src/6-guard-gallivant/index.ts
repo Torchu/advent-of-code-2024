@@ -125,6 +125,9 @@ const isOutOfBounds = (map: string[][], x: number, y: number): boolean => {
 
 /**
  * Completes the patrol route of the guard and returns the positions visited
+ * It will stop when the guard goes out of bounds
+ *
+ * @remarks If the guard is stuck in a loop, it will throw an error
  *
  * @param map Map of the area
  * @param initialPosition Initial position of the guard
@@ -135,6 +138,16 @@ const patrol = (map: string[][], initialPosition: Position): Position[] => {
   let currentPosition = { ...initialPosition };
   const visitedPositions: Position[] = [];
   while (!isOutOfBounds(map, currentPosition.x, currentPosition.y)) {
+    if (
+      visitedPositions.some(
+        (position) =>
+          position.x === currentPosition.x &&
+          position.y === currentPosition.y &&
+          position.direction === currentPosition.direction
+      )
+    ) {
+      throw new Error("Guard is stuck in a loop");
+    }
     visitedPositions.push(currentPosition);
     currentPosition = move(map, currentPosition);
   }
@@ -156,11 +169,43 @@ const countPositions = (route: Position[]): number => {
   return positions.size;
 };
 
+/**
+ * Given a map and the initial position of the guard, brute-forces the list of coordinates that if changed
+ * to an obstacle, the guard will be in a loop
+ *
+ * @param map Map of the area
+ * @param position Initial position of the guard
+ */
+const obstructGuard = (
+  map: string[][],
+  position: Position
+): { x: number; y: number }[] => {
+  const obstructions: { x: number; y: number }[] = [];
+  for (let y = 0; y < map.length; y++) {
+    console.log(`${y}/${map.length}`);
+    for (let x = 0; x < map[0].length; x++) {
+      if (map[y][x] !== "") {
+        continue;
+      }
+      const newMap = map.map((line) => line.slice());
+      newMap[y][x] = "#";
+      try {
+        patrol(newMap, position);
+      } catch (e) {
+        obstructions.push({ x, y });
+      }
+    }
+  }
+  return obstructions;
+};
+
 // MAIN
 const main = async (file: string) => {
   const data = await readInput(file);
   const route = patrol(data.map, data.initialPosition);
   console.log(countPositions(route));
+  const obstructions = obstructGuard(data.map, data.initialPosition);
+  console.log(obstructions.length);
 };
 
 export default main;
